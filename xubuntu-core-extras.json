@@ -1,0 +1,41 @@
+{
+    "variables" : {
+        "memory" : "4096",
+        "cpus" : "2",
+        "ssh_username" : "xubuntu",
+        "ssh_password" : "password"
+    },
+    "description" : "Xubuntu Core 16.04 with basic extras",
+    "builders": [
+        {
+            "name": "xubuntu-core-extras",
+            "type": "virtualbox-ovf",
+            "boot_wait": "10s",
+            "guest_additions_mode": "disable",
+            "headless": false,
+            "source_path": "output-xubuntu-core/xubuntu-core-16.04-amd64.ovf",
+            "ssh_username": "{{user `ssh_username`}}",
+            "ssh_password": "{{user `ssh_password`}}",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "sudo systemctl poweroff",
+            "vm_name": "xubuntu-core-extras-16.04-amd64",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+                ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+                ["modifyvm", "{{.Name}}", "--vram", "16"],
+                ["modifyvm", "{{.Name}}", "--usb", "on"]
+            ]
+        }
+    ],
+    "provisioners" : [
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/apt-update.sh",
+                "scripts/apt-xubuntu-core-extras.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ]
+}
