@@ -8,18 +8,19 @@
     "description" : "Xubuntu Core 16.04 with basic extras",
     "builders": [
         {
-            "name": "xubuntu-core-extras",
+            "name": "xubuntu-16.04-core-extras",
             "type": "virtualbox-ovf",
             "boot_wait": "10s",
             "guest_additions_mode": "disable",
             "headless": false,
-            "source_path": "output-xubuntu-core/xubuntu-core-16.04-amd64.ovf",
+            "source_path": "output-xubuntu-16.04-core/xubuntu-16.04-core-amd64.ova",
             "ssh_username": "{{user `ssh_username`}}",
             "ssh_password": "{{user `ssh_password`}}",
             "ssh_port": 22,
             "ssh_wait_timeout": "60m",
             "shutdown_command": "sudo systemctl poweroff",
-            "vm_name": "xubuntu-core-extras-16.04-amd64",
+            "format": "ova",
+            "vm_name": "xubuntu-16.04-core-extras-amd64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
                 ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
