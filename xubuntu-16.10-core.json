@@ -1,6 +1,6 @@
 {
     "variables" : {
-        "disk_size" : "40000",
+        "disk_size" : "80000",
         "memory" : "2048",
         "cpus" : "2",
         "ssh_username" : "xubuntu",
