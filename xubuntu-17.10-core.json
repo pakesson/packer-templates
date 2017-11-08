@@ -54,7 +54,8 @@
             "vm_name": "xubuntu-17.10-core-amd64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-                ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+                ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+                ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
             ]
         }
     ],
