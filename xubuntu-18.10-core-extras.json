@@ -1,0 +1,44 @@
+{
+    "variables" : {
+        "ubuntu_version": "18.10",
+        "memory" : "4096",
+        "cpus" : "2",
+        "vm_username" : "xubuntu",
+        "vm_password" : "password"
+    },
+    "description" : "Xubuntu Core {{user `ubuntu_version`}} with basic extras",
+    "builders": [
+        {
+            "name": "xubuntu-{{user `ubuntu_version`}}-core-extras",
+            "type": "virtualbox-ovf",
+            "boot_wait": "10s",
+            "guest_additions_mode": "disable",
+            "headless": false,
+            "source_path": "output-xubuntu-{{user `ubuntu_version`}}-core/xubuntu-{{user `ubuntu_version`}}-core-amd64.ova",
+            "ssh_username": "{{user `vm_username`}}",
+            "ssh_password": "{{user `vm_password`}}",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "sudo systemctl poweroff",
+            "format": "ova",
+            "vm_name": "xubuntu-{{user `ubuntu_version`}}-core-extras-amd64",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+                ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+                ["modifyvm", "{{.Name}}", "--vram", "16"],
+                ["modifyvm", "{{.Name}}", "--usb", "on"],
+                ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
+            ]
+        }
+    ],
+    "provisioners" : [
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/ubuntu-18.10/apt-update.sh",
+                "scripts/ubuntu-18.10/apt-xubuntu-core-extras.sh",
+                "scripts/ubuntu-18.10/cleanup.sh"
+            ]
+        }
+    ]
+}

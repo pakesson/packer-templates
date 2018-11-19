@@ -19,4 +19,4 @@ sudo apt-get -y install xarchiver thunar-archive-plugin
 # Web browser
 sudo apt-get -y install firefox
 # Text editor
-sudo apt-get -y install gedit
+sudo apt-get -y install gedit gedit-plugins
