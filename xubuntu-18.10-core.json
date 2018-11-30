@@ -1,6 +1,8 @@
 {
     "variables" : {
         "ubuntu_version": "18.10",
+        "vm_name": "xubuntu-18.10-core",
+
         "iso_url": "http://archive.ubuntu.com/ubuntu/dists/cosmic/main/installer-amd64/current/images/netboot/mini.iso",
         "iso_checksum": "b0bbeca78e7e8a2c4d20d830c015ed12cdb30f6cbedd0f63e7d686c00378953e",
         "iso_checksum_type": "sha256",
@@ -21,8 +23,9 @@
     "description" : "Xubuntu Core {{user `ubuntu_version`}}",
     "builders": [
         {
-            "name": "xubuntu-{{user `ubuntu_version`}}-core",
             "type": "virtualbox-iso",
+            "vm_name": "{{user `vm_name`}}-amd64",
+            "output_directory": "output-{{user `vm_name`}}-vbox",
             "boot_command": [
                 "<tab><wait> ",
                 "net.ifnames=0 ",
@@ -54,11 +57,51 @@
             "ssh_wait_timeout": "60m",
             "shutdown_command": "sudo systemctl poweroff",
             "format": "ova",
-            "vm_name": "xubuntu-{{user `ubuntu_version`}}-core-amd64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
                 ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
                 ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
+            ]
+        },
+        {
+            "type": "qemu",
+            "vm_name": "{{user `vm_name`}}-amd64",
+            "output_directory": "output-{{user `vm_name`}}-qemu",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<tab><wait> ",
+                "net.ifnames=0 ",
+                "auto-install/enable=true ",
+                "debconf/priority=critical ",
+                "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/xubuntu-{{user `ubuntu_version`}}-core-preseed.cfg ",
+                "passwd/username={{user `vm_username`}} ",
+                "passwd/user-password={{user `vm_password`}} ",
+                "passwd/user-password-again={{user `vm_password`}} ",
+                "country={{user `country`}} ",
+                "language={{user `language`}} ",
+                "locale={{user `locale`}} ",
+                "keyboard-configuration/xkb-keymap={{user `keymap`}} ",
+                "keyboard-configuration/layoutcode={{user `keymap`}} ",
+                "time/zone={{user `timezone`}} ",
+                "<enter>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": "{{user `disk_size`}}",
+            "http_directory": "http",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "ssh_username": "{{user `vm_username`}}",
+            "ssh_password": "{{user `vm_password`}}",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "sudo systemctl poweroff",
+            "format": "qcow2",
+            "net_device": "virtio-net",
+            "disk_interface": "virtio",
+            "qemuargs": [
+                ["-m", "{{user `memory`}}"],
+                ["-smp", "{{user `cpus`}}"]
             ]
         }
     ],
@@ -67,8 +110,26 @@
             "type": "shell",
             "scripts": [
                 "scripts/ubuntu-18.10/apt-update.sh",
-                "scripts/ubuntu-18.10/apt-xubuntu-core.sh",
-                "scripts/ubuntu-18.10/virtualbox.sh",
+                "scripts/ubuntu-18.10/apt-xubuntu-core.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/ubuntu-18.10/virtualbox.sh"
+            ],
+            "only": ["virtualbox-iso"]
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/ubuntu-18.10/qemu.sh"
+            ],
+            "only": ["qemu"]
+        },
+        {
+            "type": "shell",
+            "scripts": [
                 "scripts/ubuntu-18.10/cleanup.sh"
             ]
         }
