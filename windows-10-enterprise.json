@@ -29,12 +29,9 @@
             "iso_urls": [ "{{ user `iso_url` }}" ],
 
             "communicator": "winrm",
-            "ssh_host_port_min": "{{ user `ssh_winrm_host_port` }}",
-            "ssh_host_port_max": "{{ user `ssh_winrm_host_port` }}",
             "winrm_username": "{{ user `winrm_username` }}",
             "winrm_password": "{{ user `winrm_password` }}",
             "winrm_timeout": "12h",
-            "winrm_use_ssl": "true",
             "winrm_insecure": "true",
 
             "headless": "false",
@@ -55,13 +52,25 @@
 
             "floppy_files": [
                 "http/windows-10-enterprise/Autounattend.xml",
-                "scripts/windows-10-enterprise/fixnetwork.ps1",
-                "scripts/windows-10-enterprise/winrm_config.ps1",
-                "scripts/windows-10-enterprise/unattend.xml",
-                "scripts/windows-10-enterprise/sysprep.bat"
+                "scripts/windows-10-enterprise/floppy/fixnetwork.ps1",
+                "scripts/windows-10-enterprise/floppy/winrm-enable.ps1",
+                "scripts/windows-10-enterprise/floppy/unattend.xml",
+                "scripts/windows-10-enterprise/floppy/sysprep.bat"
             ]
     }
   ],
   "provisioners": [
+    {
+        "type": "powershell",
+        "only": ["qemu"],
+        "scripts": [
+            "scripts/windows-10-enterprise/qemu/virtio.ps1",
+            "scripts/windows-10-enterprise/qemu/spice.ps1"
+        ]
+    },
+    {
+        "type": "powershell",
+        "script": "scripts/windows-10-enterprise/tweaks.ps1"
+    }
   ]
 }

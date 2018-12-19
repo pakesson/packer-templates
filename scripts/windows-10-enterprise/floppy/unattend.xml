@@ -15,13 +15,13 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>1</ProtectYourPC>
+                <ProtectYourPC>3</ProtectYourPC><!-- 3 = Turns off Express settings. -->
                 <NetworkLocation>Work</NetworkLocation>
                 <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
                 <SkipUserOOBE>true</SkipUserOOBE>
                 <SkipMachineOOBE>true</SkipMachineOOBE>
             </OOBE>
-            <TimeZone>UTC</TimeZone>
+            <TimeZone>W. Europe Standard Time</TimeZone><!-- List supported time zones with `tzutil /l` -->
             <UserAccounts>
                 <AdministratorPassword>
                     <Value>adminpassword</Value>
@@ -41,7 +41,7 @@
     </settings>
     <settings pass="specialize">
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
-            <ComputerName>win10</ComputerName>
+            <ComputerName>Windows10</ComputerName>
             <CopyProfile>false</CopyProfile>
         </component>
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
