@@ -1,14 +1,14 @@
 {
     "variables" : {
-        "ubuntu_version": "18.10",
-        "vm_name": "xubuntu-18.10-core",
+        "ubuntu_version": "19.10",
+        "vm_name": "xubuntu-19.10",
 
-        "iso_url": "http://archive.ubuntu.com/ubuntu/dists/cosmic/main/installer-amd64/current/images/netboot/mini.iso",
-        "iso_checksum": "b0bbeca78e7e8a2c4d20d830c015ed12cdb30f6cbedd0f63e7d686c00378953e",
+        "iso_url": "http://archive.ubuntu.com/ubuntu/dists/eoan/main/installer-amd64/current/images/netboot/mini.iso",
+        "iso_checksum": "03d3ec50bce69eb13a406ac2cf8a4c3cb2b2e1fa58d257ea4f366469cbf091eb",
         "iso_checksum_type": "sha256",
 
         "disk_size" : "80000",
-        "memory" : "2048",
+        "memory" : "4096",
         "cpus" : "2",
 
         "vm_username" : "xubuntu",
@@ -20,7 +20,7 @@
         "keymap" : "se",
         "timezone" : "Europe/Stockholm"
     },
-    "description" : "Xubuntu Core {{user `ubuntu_version`}}",
+    "description" : "Xubuntu Core {{user `ubuntu_version`}} with basic extras",
     "builders": [
         {
             "type": "virtualbox-iso",
@@ -100,6 +100,7 @@
             "net_device": "virtio-net",
             "disk_interface": "virtio",
             "qemuargs": [
+                ["-display", "gtk"],
                 ["-m", "{{user `memory`}}"],
                 ["-smp", "{{user `cpus`}}"]
             ]
@@ -109,28 +110,29 @@
         {
             "type": "shell",
             "scripts": [
-                "scripts/ubuntu-18.10/apt-update.sh",
-                "scripts/ubuntu-18.10/apt-xubuntu-core.sh"
+                "scripts/ubuntu-19.10/apt-update.sh",
+                "scripts/ubuntu-19.10/apt-xubuntu-core.sh",
+                "scripts/ubuntu-19.10/apt-xubuntu-core-extras.sh"
             ]
         },
         {
             "type": "shell",
             "scripts": [
-                "scripts/ubuntu-18.10/virtualbox.sh"
+                "scripts/ubuntu-19.10/virtualbox.sh"
             ],
             "only": ["virtualbox-iso"]
         },
         {
             "type": "shell",
             "scripts": [
-                "scripts/ubuntu-18.10/qemu.sh"
+                "scripts/ubuntu-19.10/qemu.sh"
             ],
             "only": ["qemu"]
         },
         {
             "type": "shell",
             "scripts": [
-                "scripts/ubuntu-18.10/cleanup.sh"
+                "scripts/ubuntu-19.10/cleanup.sh"
             ]
         }
     ]
