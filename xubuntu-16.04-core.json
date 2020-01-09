@@ -92,6 +92,7 @@
             "net_device": "virtio-net",
             "disk_interface": "virtio",
             "qemuargs": [
+                ["-display", "gtk"],
                 ["-m", "{{user `memory`}}"],
                 ["-smp", "{{user `cpus`}}"]
             ]
