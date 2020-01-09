@@ -1,18 +1,24 @@
 {
     "variables": {
+        "vm_name": "archlinux-{{isotime \"20060102\"}}",
+
+        "iso_url": "https://mirrors.edge.kernel.org/archlinux/iso/2019.07.01/archlinux-2019.07.01-x86_64.iso",
+        "iso_checksum_url": "https://mirrors.edge.kernel.org/archlinux/iso/2019.07.01/sha1sums.txt",
+        "iso_checksum_type": "sha1",
+
         "disk_size" : "80000",
-        "memory" : "2048",
+        "memory" : "4096",
         "cpus" : "2",
         "vram" : "32",
-        "iso_url": "https://mirrors.kernel.org/archlinux/iso/2018.01.01/archlinux-2018.01.01-x86_64.iso",
-        "iso_checksum_url": "https://mirrors.kernel.org/archlinux/iso/2018.01.01/sha1sums.txt",
-        "iso_checksum_type": "sha1",
+
+        "vm_username" : "arch",
+        "vm_password" : "password",
+
         "country": "SE"
     },
     "description" : "Arch Linux",
     "builders": [
         {
-            "name": "archlinux-x86_64",
             "type": "virtualbox-iso",
             "iso_url": "{{user `iso_url`}}",
             "iso_checksum_url": "{{user `iso_checksum_url`}}",
@@ -25,7 +31,6 @@
             "boot_command": [
                 "<enter><wait10><wait10>",
                 "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux/enable-ssh.sh<enter><wait5>",
-                "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux/poweroff.timer<enter><wait5>",
                 "/usr/bin/bash ./enable-ssh.sh<enter>"
             ],
             "disk_size": "{{user `disk_size`}}",
@@ -33,7 +38,7 @@
             "ssh_username": "arch",
             "ssh_password": "password",
             "ssh_timeout": "60m",
-            "shutdown_command": "sudo systemctl start poweroff.timer",
+            "shutdown_command": "sudo systemctl poweroff",
             "format": "ova",
             "vm_name": "archlinux-{{isotime \"20060102\"}}-x86_64",
             "vboxmanage": [
@@ -41,16 +46,71 @@
                 ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
                 ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"]
             ]
+        },
+        {
+            "type": "qemu",
+            "vm_name": "{{user `vm_name`}}-x86_64",
+            "output_directory": "output-{{user `vm_name`}}-qemu",
+            "accelerator": "kvm",
+            "http_directory": "http",
+            "boot_wait": "15s",
+            "boot_command": [
+                "<enter><wait10><wait10>",
+                "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/archlinux/enable-ssh.sh<enter><wait5>",
+                "/usr/bin/bash ./enable-ssh.sh<enter>"
+            ],
+            "disk_size": "{{user `disk_size`}}",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum_url": "{{user `iso_checksum_url`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+            "ssh_username": "{{user `vm_username`}}",
+            "ssh_password": "{{user `vm_password`}}",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "sudo systemctl poweroff",
+            "format": "qcow2",
+            "net_device": "virtio-net",
+            "disk_interface": "virtio",
+            "qemuargs": [
+                ["-display", "gtk"],
+                ["-m", "{{user `memory`}}"],
+                ["-smp", "{{user `cpus`}}"]
+            ]
         }
     ],
     "provisioners": [
         {
-            "type": "shell",
-            "execute_command": "{{.Vars}} COUNTRY={{ user `country` }} sudo -E -S bash '{{.Path}}'",
-            "script": "scripts/archlinux/install.sh"
+            "type": "file",
+            "source": "scripts/archlinux/install-chroot.sh",
+            "destination": "/tmp/install-chroot.sh"
         },
         {
             "type": "shell",
+            "execute_command": "{{.Vars}} COUNTRY={{ user `country` }} sudo -E -S bash '{{.Path}}'",
+            "scripts": ["scripts/archlinux/install-init.sh"]
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "script": "scripts/archlinux/install-vbox.sh",
+            "only": ["virtualbox-iso"],
+            "pause_before": "5s"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "script": "scripts/archlinux/install-qemu.sh",
+            "only": ["qemu"],
+            "pause_before": "5s"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "script": "scripts/archlinux/install-cli-utils.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
             "script": "scripts/archlinux/install-desktop.sh"
         },
         {
