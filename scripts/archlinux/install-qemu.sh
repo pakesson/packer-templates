@@ -6,7 +6,7 @@ set -x # Print all commands as they execute
 pacman -S --noconfirm xf86-video-qxl
 
 pacman -S --noconfirm qemu-guest-agent
-systemctl enable qemu-ga.service
+systemctl enable qemu-guest-agent.service
 
 pacman -S --noconfirm spice-vdagent
 #systemctl enable spice-vdagentd.service

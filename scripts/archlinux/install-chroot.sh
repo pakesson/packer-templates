@@ -22,8 +22,9 @@ echo 'arch ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10_archuser
 chmod 0440 /etc/sudoers.d/10_archuser
 
 # Networking
-mkdir -p /etc/systemd/network
-ln -sf /dev/null /etc/systemd/network/99-default.link
+#mkdir -p /etc/systemd/network
+#ln -sf /dev/null /etc/systemd/network/99-default.link
+ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
 systemctl enable sshd
 systemctl enable dhcpcd@eth0

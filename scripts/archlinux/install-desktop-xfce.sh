@@ -15,18 +15,11 @@ systemctl enable lightdm.service
 #systemctl enable lxdm
 pacman -S --noconfirm xorg-xinit
 
-pacman -S --noconfirm i3-gaps
-pacman -S --noconfirm i3blocks i3lock i3status 
+pacman -S --noconfirm xfce4
 
-pacman -S --noconfirm dmenu rofi # dmenu is in the default i3 config
-pacman -S --noconfirm compton
 pacman -S --noconfirm termite 
 pacman -S --noconfirm ttf-dejavu ttf-droid terminus-font
 
-#pacman -S --noconfirm polybar
-
-pacman -S --noconfirm thunar
-pacman -S --noconfirm lxappearance
 pacman -S --noconfirm arc-gtk-theme arc-icon-theme
 pacman -S --noconfirm elementary-icon-theme gtk-engine-murrine
 

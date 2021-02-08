@@ -25,7 +25,7 @@ export SWAP_PARTITION="${DISK}1"
 export ROOT_PARTITION="${DISK}2"
 TARGET_DIR='/mnt'
 
-MIRRORLIST="https://www.archlinux.org/mirrorlist/?country=SE&country=DK&protocol=https&ip_version=4&use_mirror_status=on"
+MIRRORLIST="https://archlinux.org/mirrorlist/?country=SE&country=DK&protocol=https&ip_version=4&use_mirror_status=on"
 
 echo "Setting local mirrors"
 curl -fsS $MIRRORLIST | sed 's/^#Server/Server/' > /etc/pacman.d/mirrorlist
@@ -46,8 +46,8 @@ mkfs.ext4 -q -L root "${ROOT_PARTITION}"
 mount "${ROOT_PARTITION}" /mnt
 
 echo 'Bootstrapping the base installation'
-pacstrap ${TARGET_DIR} base base-devel
-arch-chroot ${TARGET_DIR} pacman -S --noconfirm openssh grub
+pacstrap ${TARGET_DIR} base base-devel linux linux-firmware
+arch-chroot ${TARGET_DIR} pacman -S --noconfirm openssh grub dhcpcd
 
 echo 'Generating the filesystem table'
 swapon "${SWAP_PARTITION}"
