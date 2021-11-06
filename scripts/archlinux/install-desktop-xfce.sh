@@ -17,15 +17,14 @@ pacman -S --noconfirm xorg-xinit
 
 pacman -S --noconfirm xfce4
 
-pacman -S --noconfirm termite 
 pacman -S --noconfirm ttf-dejavu ttf-droid terminus-font
 
-pacman -S --noconfirm arc-gtk-theme arc-icon-theme
-pacman -S --noconfirm elementary-icon-theme gtk-engine-murrine
-
 # Sound
-pacman -S --noconfirm pulseaudio pulseaudio-alsa
+# Pulseaudio
+#pacman -S --noconfirm pulseaudio pulseaudio-alsa
 # If multilib is enabled
 #pacman -S --noconfirm lib32-libpulse lib32-alsa-plugins
+# Pipewire
+pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse
 
 pacman -S --noconfirm xdg-utils

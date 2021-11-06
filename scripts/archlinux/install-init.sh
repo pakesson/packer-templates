@@ -15,7 +15,7 @@ fi
 export LOCAL_HOSTNAME='arch.local'
 export KEYMAP='se'
 export LOCALE='en_US.UTF-8'
-export PASSWORD=$(/usr/bin/openssl passwd -crypt 'password')
+export PASSWORD='password'
 export TIMEZONE='Europe/Stockholm'
 COUNTRY=${COUNTRY:-SE}
 

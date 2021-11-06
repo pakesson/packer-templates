@@ -16,14 +16,13 @@ echo "LANG=${LOCALE}" > /etc/locale.conf
 mkinitcpio -p linux
 
 # Users
-usermod --password ${PASSWORD} root # Set root password
-useradd --password ${PASSWORD} --comment 'Arch Linux User' --create-home --user-group arch
+echo "root:${PASSWORD}" | /usr/bin/chpasswd # Set root password
+useradd --comment 'Arch Linux User' --create-home --user-group arch
+echo "arch:${PASSWORD}" | /usr/bin/chpasswd # Set user password
 echo 'arch ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/10_archuser
 chmod 0440 /etc/sudoers.d/10_archuser
 
 # Networking
-#mkdir -p /etc/systemd/network
-#ln -sf /dev/null /etc/systemd/network/99-default.link
 ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
 systemctl enable sshd

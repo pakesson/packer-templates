@@ -9,5 +9,3 @@ pacman -S --noconfirm qemu-guest-agent
 systemctl enable qemu-guest-agent.service
 
 pacman -S --noconfirm spice-vdagent
-#systemctl enable spice-vdagentd.service
-#echo "[Unit]\nAfter=dbus.service" > /etc/systemd/system/spice-vdagentd.service.d/override.conf
